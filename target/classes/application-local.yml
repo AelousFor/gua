@@ -1,0 +1,11 @@
+server:
+  port: 9632
+#  servlet:
+#    context-path: /api
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+
