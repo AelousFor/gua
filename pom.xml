@@ -30,6 +30,7 @@
     </properties>
 
     <profiles>
+
         <profile>
             <!-- 本地开发环境 -->
             <id>local</id>
@@ -53,6 +54,19 @@
 
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.78</version>
+        </dependency>
 
         <!-- swagger的用户界面，用于展示api接口文档 -->
         <dependency>

@@ -1,96 +1,131 @@
 package com.pancm.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.pancm.model.DTO.*;
+import com.pancm.model.utils.AddressUtil;
+import com.pancm.model.utils.RequestUtil;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/serve")
-@Api(value = "重定向controller", tags = {"重定向接口"})
+@Api(value = "开关节点controller", tags = {"开关节点接口"})
 public class RequestRedirectController {
 
-    private static final String Info = "info";
+    private static final String Sp = AddressUtil.getSp();
 
-    private static final String Start = "startprocess";
+    private static final String Start = AddressUtil.getStart();
 
-    private static final String Stop = "stopprocess";
+    private static final String Stop = AddressUtil.getStop();
 
-    private static final String PreUrl15 = "http://172.22.56.15:12207/api/v1/";
 
-    private static final String PreUrl16 = "http://172.22.56.16:12207/api/v1/";
-
-    private static final String PreUrl12 = "http://172.22.56.12:12207/api/v1/";
-
-    @GetMapping("/apiOn12")
-    public void get12ApiRedirect(HttpServletResponse response) throws Exception {
-        response.sendRedirect(PreUrl12);
+    /**
+     * sp_command
+     **/
+    private JSONObject spGet(String action) {
+        return RequestUtil.get12(Sp + action);
     }
 
-    @GetMapping("/apiOn15")
-    public void get15ApiRedirect(HttpServletResponse response) throws Exception {
-        response.sendRedirect(PreUrl15);
+    private JSONObject spPost(String action, PostBase base) {
+        return RequestUtil.post12(Sp + action, base);
     }
 
-    @GetMapping("/apiOn16")
-    public void get16ApiRedirect(HttpServletResponse response) throws Exception {
-        response.sendRedirect(PreUrl16);
+    @GetMapping("/spNew")
+    @ApiOperation(value = "spNew启动新的sp_command实例用于控制")
+    public JSONObject spNew() {
+        //发送http请求并返回结果
+        return spGet("new");
     }
 
-    @GetMapping("/infoOn12")
-    public void get12InfoRedirect(HttpServletResponse response) throws Exception {
-        response.sendRedirect(PreUrl12 + Info);
+    @PostMapping("/spStart")
+    @ApiOperation(value = "spStart通过指定的场景和存储模式启动演习")
+    public JSONObject spStart(@RequestBody SpStartDTO spStartDTO) {
+        //发送http请求并返回结果
+        return spPost("start", spStartDTO);
     }
 
-    @GetMapping("/infoOn15")
-    public void get15InfoRedirect(HttpServletResponse response) throws Exception {
-        response.sendRedirect(PreUrl15 + Info);
+    @GetMapping("/spStop")
+    @ApiOperation(value = "spStop停止当前正在运行的演习")
+    public JSONObject spStop() {
+        //发送http请求并返回结果
+        return spGet("stop");
     }
 
-    @GetMapping("/infoOn16")
-    public void get16InfoRedirect(HttpServletResponse response) throws Exception {
-        response.sendRedirect(PreUrl16 + Info);
+    @GetMapping("/spList")
+    @ApiOperation(value = "spList获得已记录的存储")
+    public JSONObject spList() {
+        //发送http请求并返回结果
+        return spGet("list");
     }
+
+    @PostMapping("/spReplay")
+    @ApiOperation(value = "spReplay通过指定的场景和存储模式启动演习")
+    public JSONObject spReplay(@RequestBody SpReplayDTO spReplayDTO) {
+        //发送http请求并返回结果
+        return spPost("replay", spReplayDTO);
+    }
+
+    @GetMapping("/spDestory")
+    @ApiOperation(value = "spDestory销毁当前的sp_command_iinterface")
+    public JSONObject spDestory() {
+        //发送http请求并返回结果
+        return spGet("destory");
+    }
+
 
     /**
      * 启动和停止
      */
-    public void startOrStopRedirect(String pre, String suf, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String string = "?" + request.getQueryString();
-        response.sendRedirect(pre + "shit/" + suf + string);
+
+
+    @PostMapping("/start12")
+    @ApiOperation(value = "12启动")
+    public JSONObject start12Redirect(@RequestBody StartDTO startDTO) {
+        return RequestUtil.post12(Start, startDTO);
     }
 
-    @GetMapping("/start12")
-    public void start12Redirect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        startOrStopRedirect(PreUrl12, Start, request, response);
+    @PostMapping("/stop12")
+    @ApiOperation(value = "12终止")
+    public JSONObject stop12Redirect(@RequestBody StopDTO stopDTO) {
+        return RequestUtil.post12(Stop, stopDTO);
     }
 
-    @GetMapping("/stop12")
-    public void stop12Redirect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        startOrStopRedirect(PreUrl12, Stop, request, response);
+    @PostMapping("/start14")
+    @ApiOperation(value = "14启动")
+    public JSONObject start14Redirect(@RequestBody StartDTO startDTO) {
+        return RequestUtil.post14(Start, startDTO);
     }
 
-    @GetMapping("/start15")
-    public void start15Redirect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        startOrStopRedirect(PreUrl15, Start, request, response);
+    @PostMapping("/stop14")
+    @ApiOperation(value = "14终止")
+    public JSONObject stop14Redirect(@RequestBody StopDTO stopDTO) {
+        return RequestUtil.post14(Stop, stopDTO);
     }
 
-    @GetMapping("/stop15")
-    public void stop15Redirect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        startOrStopRedirect(PreUrl15, Stop, request, response);
+    @PostMapping("/start15")
+    @ApiOperation(value = "15启动")
+    public JSONObject start15Redirect(@RequestBody StartDTO startDTO) {
+        return RequestUtil.post15(Start, startDTO);
     }
 
-    @GetMapping("/start16")
-    public void start16Redirect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        startOrStopRedirect(PreUrl16, Start, request, response);
+    @PostMapping("/stop15")
+    @ApiOperation(value = "15终止")
+    public JSONObject stop15Redirect(@RequestBody StopDTO stopDTO) {
+        return RequestUtil.post15(Stop, stopDTO);
     }
 
-    @GetMapping("/stop16")
-    public void stop16Redirect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        startOrStopRedirect(PreUrl16, Stop, request, response);
+    @PostMapping("/start16")
+    @ApiOperation(value = "16启动")
+    public JSONObject start16Redirect(@RequestBody StartDTO startDTO) {
+        return RequestUtil.post16(Start, startDTO);
     }
+
+    @PostMapping("/stop16")
+    @ApiOperation(value = "16终止")
+    public JSONObject stop16Redirect(@RequestBody StopDTO stopDTO) {
+        return RequestUtil.post16(Stop, stopDTO);
+    }
+
 }

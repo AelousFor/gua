@@ -1,5 +1,6 @@
 package com.pancm.config;
 
+import com.pancm.model.utils.AddressUtil;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.net.GuacamoleSocket;
 import org.apache.guacamole.net.GuacamoleTunnel;
@@ -16,8 +17,8 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author pancm
@@ -49,52 +50,42 @@ public class WebSocketTunnel extends GuacamoleWebSocketTunnelEndpoint {
      */
     @Override
     protected GuacamoleTunnel createTunnel(Session session, EndpointConfig endpointConfig) throws GuacamoleException {
-        System.out.println("sessionMap:" + session.getRequestParameterMap());
-        System.out.println("myConfig:" + myConfig.getPort());
+
+        Map<String, List<String>> map = session.getRequestParameterMap();
+
         // 获取url的值
-        Integer height = Integer.valueOf(session.getRequestParameterMap().get("height").get(0));
-        Integer width = Integer.valueOf(session.getRequestParameterMap().get("width").get(0));
+        Integer height = Integer.valueOf(map.get("height").get(0));
+        Integer width = Integer.valueOf(map.get("width").get(0));
         GuacamoleClientInformation information = new GuacamoleClientInformation();
         information.setOptimalScreenHeight(height);
         information.setOptimalScreenWidth(width);
+
         //guacamole server地址 r端口
-        String hostname = "172.22.56.11";
-//        int port = 4822;
+//        String hostname = "172.22.56.11";
+        String hostname = "127.0.0.1";
         int port = 4822;
         GuacamoleConfiguration configuration = new GuacamoleConfiguration();
 
         //获取值
-        String protocol = String.valueOf(session.getRequestParameterMap().get("protocol").get(0));
-        String ip = session.getRequestParameterMap().get("ip").get(0);
-        String hostPort = session.getRequestParameterMap().get("port").get(0);
-        configuration.setProtocol(protocol);
+        String choice = map.get("choice").get(0);
+        String ip = "error";
+        String hostPort = "error";
+        if (choice.equals("ue")) {
+            ip = AddressUtil.readConf("ip-ue");
+            hostPort = AddressUtil.readConf("ue-port");
+        } else if (choice.equals("dy")) {
+            ip = AddressUtil.readConf("ip-dy");
+            hostPort = AddressUtil.readConf("dy-port");
+        }
+
+        configuration.setProtocol("rdp");
         // 远程windows服务的地址
         configuration.setParameter("hostname", ip);
         configuration.setParameter("port", hostPort);
-        configuration.setParameter("username", "huangxiaojie");
-        configuration.setParameter("password", "Aa123456");
+        configuration.setParameter("username", AddressUtil.readConf("username"));
+        configuration.setParameter("password", AddressUtil.readConf("password"));
         configuration.setParameter("ignore-cert", "true");
         configuration.setParameter("security", "NLA");
-//        configuration.setProtocol("ssh");
-//        configuration.setParameter("hostname", "114.116.21.159");
-//        configuration.setParameter("port", "22");
-//        configuration.setParameter("username", "root");
-//        configuration.setParameter("password", "13271314@hw");
-//        configuration.setParameter("ignore-cert", "true");
-
-//        configuration.setProtocol("ssh");
-//        configuration.setParameter("hostname", "172.22.56.12");
-//        configuration.setParameter("port", "22");
-//        configuration.setParameter("username", "huangxiaojie");
-//        configuration.setParameter("password", "Aa123456");
-//        configuration.setParameter("ignore-cert", "true");
-
-        String fileName = getNowTime() + ".guac";//文件名
-        String outputFilePath = "/home/guacamole";
-        //添加会话录制--录屏
-        configuration.setParameter("recording-path", outputFilePath);
-        configuration.setParameter("create-recording-path", "true");
-        configuration.setParameter("recording-name", fileName);
 
         GuacamoleSocket socket = new ConfiguredGuacamoleSocket(
                 new InetGuacamoleSocket(hostname, port),
@@ -102,8 +93,7 @@ public class WebSocketTunnel extends GuacamoleWebSocketTunnelEndpoint {
                 information
         );
 
-        GuacamoleTunnel tunnel = new SimpleGuacamoleTunnel(socket);
-        return tunnel;
+        return new SimpleGuacamoleTunnel(socket);
     }
 
     private void optClose(Session session) {
@@ -120,7 +110,4 @@ public class WebSocketTunnel extends GuacamoleWebSocketTunnelEndpoint {
 
     }
 
-    private String getNowTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-    }
 }
