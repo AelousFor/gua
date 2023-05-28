@@ -18,15 +18,19 @@ public class AddressUtil {
 
     private static final String Version = "v1/";
 
-    private static final String PreUrl12 = "http://127.0.0.1:12207/api/" + Version;
-
-    private static final String PreUrl14 = "http://12.12.12.208:12207/api/" + Version;
-
-    private static final String PreUrl15 = "http://" + readConf("ip-ue") + ":12207/api/" + Version;
-
-    private static final String PreUrl16 = "http://" + readConf("ip-dy") + ":12207/api/" + Version;
-
     private static final String TestUrl = "http://127.0.0.1:9632/test";
+
+    public static String getUrl(String key) {
+        return "http://" + readConf(key) + ":12207/api/" + Version;
+    }
+
+    public static String getTestUrl() {
+        return TestUrl;
+    }
+
+    public static String getSp() {
+        return "sp/";
+    }
 
     public static String getInfo() {
         return "info";
@@ -42,10 +46,6 @@ public class AddressUtil {
 
     public static String getScriptStatus() {
         return "scriptstatus";
-    }
-
-    public static String getSp() {
-        return "sp/";
     }
 
     public static String getGetStatus() {
@@ -68,25 +68,6 @@ public class AddressUtil {
         return "useral";
     }
 
-    public static String getPreUrl15() {
-        return PreUrl15;
-    }
-
-    public static String getPreUrl16() {
-        return PreUrl16;
-    }
-
-    public static String getPreUrl12() {
-        return PreUrl12;
-    }
-
-    public static String getPreUrl14() {
-        return PreUrl14;
-    }
-
-    public static String getTestUrl() {
-        return TestUrl;
-    }
 
     public static JSONObject sendGetRequest(String url, MultiValueMap<String, String> params) {
         RestTemplate client = new RestTemplate();
@@ -122,7 +103,6 @@ public class AddressUtil {
         return restTemplate;
     }
 
-
     public static String readConf(String key) {
         //读取配置文件
         Properties properties = new Properties();
@@ -136,8 +116,12 @@ public class AddressUtil {
             e.printStackTrace();
         }
 
+        String property = properties.getProperty(key);
+        if (property == null) {
+            throw new RuntimeException("未找到该URL");
+        }
         //获取配置文件数据
-        return properties.getProperty(key);
+        return property;
     }
 
 }

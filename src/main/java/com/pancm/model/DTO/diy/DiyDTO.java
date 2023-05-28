@@ -7,6 +7,7 @@ import java.util.HashMap;
 @Data
 public class DiyDTO {
 
+    String key;
     String action;
     HashMap<String, CommandsData> data;
 }

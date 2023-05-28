@@ -67,23 +67,17 @@ public class WebSocketTunnel extends GuacamoleWebSocketTunnelEndpoint {
         GuacamoleConfiguration configuration = new GuacamoleConfiguration();
 
         //获取值
-        String choice = map.get("choice").get(0);
-        String ip = "error";
-        String hostPort = "error";
-        if (choice.equals("ue")) {
-            ip = AddressUtil.readConf("ip-ue");
-            hostPort = AddressUtil.readConf("ue-port");
-        } else if (choice.equals("dy")) {
-            ip = AddressUtil.readConf("ip-dy");
-            hostPort = AddressUtil.readConf("dy-port");
-        }
+        String ip = AddressUtil.readConf(map.get("ip-key").get(0));
+        String hostPort = map.get("port").get(0);
+        String userName = map.get("username").get(0);
+        String password = map.get("password").get(0);
 
         configuration.setProtocol("rdp");
         // 远程windows服务的地址
         configuration.setParameter("hostname", ip);
         configuration.setParameter("port", hostPort);
-        configuration.setParameter("username", AddressUtil.readConf("username"));
-        configuration.setParameter("password", AddressUtil.readConf("password"));
+        configuration.setParameter("username", userName);
+        configuration.setParameter("password", password);
         configuration.setParameter("ignore-cert", "true");
         configuration.setParameter("security", "NLA");
 

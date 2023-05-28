@@ -2,20 +2,17 @@ package com.pancm.test;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pancm.model.DTO.StartDTO;
-import com.pancm.model.DTO.diy.DataWithoutWorkdir;
 import com.pancm.model.utils.AddressUtil;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/test")
 @Api(value = "本地测试controller", tags = {"本地测试接口"})
-@ApiIgnore
 public class Test {
 
     @PostMapping("/post")
-    public JSONObject test(@RequestBody StartDTO startDTO) {
+    public JSONObject test1(@RequestBody StartDTO startDTO) {
         return AddressUtil.sendPostRequest(AddressUtil.getTestUrl() + "/base", startDTO);
     }
 
@@ -25,12 +22,8 @@ public class Test {
     }
 
     @GetMapping("/urltest")
-    public String t() {
-        return AddressUtil.getPreUrl15();
+    public String test2(@RequestParam String key) {
+        return AddressUtil.getUrl(key);
     }
 
-    @PostMapping("/DTOtest")
-    public void t2(@RequestBody DataWithoutWorkdir commandsData) {
-
-    }
 }

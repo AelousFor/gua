@@ -24,41 +24,18 @@ public class DiyController {
      *
      * @return
      */
-    @GetMapping("/commands15")
-    @ApiOperation(value = "get自定义15")
-    private JSONObject getOn15() {
-        return RequestUtil.get15(Commands);
+    @GetMapping("/commands")
+    @ApiOperation(value = "get自定义")
+    private JSONObject getDiy(@RequestParam String key) {
+        return RequestUtil.get(key, Commands);
     }
 
-    @GetMapping("/commands16")
-    @ApiOperation(value = "get自定义16")
-    private JSONObject getOn16() {
-        return RequestUtil.get16(Commands);
+    @PostMapping("/commands")
+    @ApiOperation(value = "post自定义")
+    private JSONObject postDiy(@RequestBody DiyDTO diyDTO) {
+        return RequestUtil.post(diyDTO.getKey(), Commands, checkDTO(diyDTO));
     }
 
-    @GetMapping("/commands12")
-    @ApiOperation(value = "get自定义12")
-    private JSONObject getOn12() {
-        return RequestUtil.get12(Commands);
-    }
-
-    @PostMapping("/commands15")
-    @ApiOperation(value = "post自定义15")
-    private JSONObject postOn15(@RequestBody DiyDTO diyDTO) {
-        return RequestUtil.post15(Commands, checkDTO(diyDTO));
-    }
-
-    @PostMapping("/commands16")
-    @ApiOperation(value = "post自定义16")
-    private JSONObject postOn16(@RequestBody DiyDTO diyDTO) {
-        return RequestUtil.post16(Commands, checkDTO(diyDTO));
-    }
-
-    @PostMapping("/commands12")
-    @ApiOperation(value = "post自定义12")
-    private JSONObject postOn12(@RequestBody DiyDTO diyDTO) {
-        return RequestUtil.post12(Commands, checkDTO(diyDTO));
-    }
 
     private DiyRedirectDTO checkDTO(DiyDTO diyDTO) {
         DiyRedirectDTO dto = new DiyRedirectDTO();

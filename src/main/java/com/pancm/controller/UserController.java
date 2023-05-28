@@ -20,51 +20,31 @@ public class UserController {
 
     private static final String Useral = AddressUtil.getUseral();
 
-    @GetMapping("/cases15")
-    @ApiOperation(value = "获取案例15")
-    private JSONObject cases15() {
-        return RequestUtil.get15(Cases);
+    @GetMapping("/cases")
+    @ApiOperation(value = "获取案例")
+    private JSONObject cases(@RequestParam String key) {
+        return RequestUtil.get(key, Cases);
     }
 
-    @GetMapping("/cases16")
-    @ApiOperation(value = "获取案例16")
-    private JSONObject cases16() {
-        return RequestUtil.get16(Cases);
+
+    @PostMapping("/search")
+    @ApiOperation(value = "查找action")
+    private JSONObject search(@RequestBody SearchDTO searchDTO) {
+        return RequestUtil.post(searchDTO.getKey(), Search, searchDTO);
     }
 
-    @PostMapping("/search15")
-    @ApiOperation(value = "查找action15")
-    private JSONObject search15(@RequestBody SearchDTO searchDTO) {
-        return RequestUtil.post15(Search, searchDTO);
+
+    @GetMapping("/useral")
+    @ApiOperation(value = "获取算法")
+    private JSONObject getUseral(@RequestParam String key) {
+        return RequestUtil.get(key, Useral);
     }
 
-    @PostMapping("/search16")
-    @ApiOperation(value = "查找action16")
-    private JSONObject search16(@RequestBody SearchDTO searchDTO) {
-        return RequestUtil.post16(Search, searchDTO);
+
+    @PostMapping("/useral")
+    @ApiOperation(value = "修改算法")
+    private JSONObject postUseral(@RequestBody UseralDTO useralDTO) {
+        return RequestUtil.post(useralDTO.getKey(), Useral, useralDTO);
     }
 
-    @GetMapping("/useral15")
-    @ApiOperation(value = "获取算法15")
-    private JSONObject getUseral15() {
-        return RequestUtil.get15(Useral);
-    }
-
-    @GetMapping("/useral16")
-    @ApiOperation(value = "获取算法16")
-    private JSONObject getUseral16() {
-        return RequestUtil.get16(Useral);
-    }
-
-    @PostMapping("/useral15")
-    @ApiOperation(value = "修改算法15")
-    private JSONObject postUseral15(@RequestBody UseralDTO useralDTO) {
-        return RequestUtil.post15(Useral, useralDTO);
-    }
-
-    @PostMapping("/useral16")
-    @ApiOperation(value = "修改算法16")
-    private JSONObject postUseral16(@RequestBody UseralDTO useralDTO) {
-        return RequestUtil.post16(Useral, useralDTO);
-    }
 }
