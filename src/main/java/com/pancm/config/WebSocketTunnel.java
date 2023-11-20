@@ -52,6 +52,7 @@ public class WebSocketTunnel extends GuacamoleWebSocketTunnelEndpoint {
     protected GuacamoleTunnel createTunnel(Session session, EndpointConfig endpointConfig) throws GuacamoleException {
 
         Map<String, List<String>> map = session.getRequestParameterMap();
+        System.out.println(map);
 
         // 获取url的值
         Integer height = Integer.valueOf(map.get("height").get(0));
@@ -61,8 +62,8 @@ public class WebSocketTunnel extends GuacamoleWebSocketTunnelEndpoint {
         information.setOptimalScreenWidth(width);
 
         //guacamole server地址 r端口
-//        String hostname = "172.22.56.11";
-        String hostname = "127.0.0.1";
+        String hostname = "172.22.56.11";
+//        String hostname = "127.0.0.1";
         int port = 4822;
         GuacamoleConfiguration configuration = new GuacamoleConfiguration();
 
